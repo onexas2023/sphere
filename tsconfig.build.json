@@ -1,0 +1,12 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "rootDir": "src",
+        "module": "es2020",
+        "moduleResolution": "node"
+    },
+    "exclude": [
+        "jest/**/*.test.ts",
+        "jest/**/*.test.tsx"
+    ]
+}

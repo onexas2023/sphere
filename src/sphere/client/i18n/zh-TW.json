@@ -1,0 +1,200 @@
+{
+    "action": {
+        "add": "增加",
+        "cancel": "取消",
+        "close": "關閉",
+        "create": "建立",
+        "delete": "刪除",
+        "edit": "編輯",
+        "fullscreen": "全螢幕",
+        "link": "連結",
+        "more": "更多",
+        "next": "下一步",
+        "ok": "確定",
+        "play": "播放",
+        "pause": "暫停",
+        "reload": "重載",
+        "previous": "上一步",
+        "remove": "移除",
+        "submit": "確定",
+        "update": "更新",
+        "save": "儲存",
+        "upload": "上傳",
+        "selectFile": "選擇檔案",
+        "addFile": "新增檔案",
+        "newDirectory": "新增目錄",
+        "replaceFile": "罝換檔案",
+        "select": "選擇",
+        "ignore": "忽略",
+        "clipboard": "複製到剪貼簿",
+        "apply": "套用",
+        "download": "下載",
+        "view": "查看",
+        "return": "返回",
+        "open": "開啟",
+        "undo": "復原",
+        "redo": "取消復原"
+    },
+    "allExceptYou": "已選擇全部, 除了您",
+    "backHome": "回首頁",
+    "byte": "位元組",
+    "closedDateTime": "關閉時間",
+    "sphere": "Sphere",
+    "code": "代碼",
+    "createdDateTime": "建立時間",
+    "updateddDateTime": "更新時間",
+    "modifiedDateTime": "修改時間",
+    "fileSize": "檔案大小",
+    "description": "描述",
+    "domain": {
+        "@": "網域",
+        "local": "本地"
+    },
+    "email": "電子郵件",
+    "error": "錯誤",
+    "filter": "篩選",
+    "footer": {
+        "support": "協助",
+        "wecanhelp": "聯絡我們"
+    },
+    "isYou": "這是您",
+    "isYour": "是您的",
+    "languages": {
+        "@": "語系",
+        "en": "英文(美國)/English(USA)",
+        "zh-TW": "中文(台灣)"
+    },
+    "login": "登入",
+    "logout": "登出",
+    "state": "狀態",
+    "status": "狀況",
+    "msg": {
+        "addSuccess": "新增 {{target}} 成功",
+        "allSelected": "已選擇全部",
+        "authenticating": "認證中",
+        "authenticationFail": "認證失敗，請確認你的帳號及密碼",
+        "autoReloadSecond": "資料每{{second}}秒會自動更新",
+        "cancelSuccess": "取消 {{target}} 成功",
+        "contactAdmin": "請聯絡系統管理者",
+        "createSuccess": "建立 {{target}} 成功",
+        "deleteSuccess": "刪除 {{target}} 成功",
+        "uploadSuccess": "上傳 {{target}} 成功",
+        "uploadAbort": "上傳 {{target}} 中斷",
+        "emptyList": "清單是空的",
+        "internalError": "內部錯誤",
+        "internalErrorHint": "很抱歉，系統目前有一些內部錯誤，請稍後再試",
+        "lostAuthentication": "失去認証",
+        "lostAuthenticationHint": "很抱歉，可能某些原因造成了失去認證問題，請再重新登入一次",
+        "noOptions": "沒有選項",
+        "noPermission": "沒有權限",
+        "noPermissionHint": "很抱歉，權限不足無法讀取，請要求存取權",
+        "nSelected": "已選擇 {{n}} 筆",
+        "nSelectedWithInfo": "已選擇 {{n}} 筆, {{info}}",
+        "pageNotFound": "頁面找不到",
+        "pageNotFoundHint": "很抱歉，找不到該網頁，請確認網址是否正確",
+        "uiError": "前端畫面錯誤",
+        "uiErrorHint": "很抱歉，前端畫面有錯誤，請稍後再試",
+        "removeSuccess": "移除 {{target}} 成功",
+        "sayHi": "您好, {{name}}",
+        "updateSuccess": "更新 {{target}} 成功",
+        "jobRunning": "工作 {{name}} 執行中",
+        "jobFinished": "工作 {{name}} 已結束",
+        "notTextFormat": "不是文字格式"
+    },
+    "myAccount": {
+        "@": "我的帳號",
+        "msg": {
+            "updatePasswordNoPermission": "沒有權限, 原密碼可能是錯誤的"
+        },
+        "newPassword": "新密碼",
+        "newPasswordConfirmation": "新密碼確認",
+        "oldPassword": "原密碼",
+        "pageSize": "每頁數量",
+        "preferences": "喜好設定",
+        "profile": "個人資料",
+        "validator": {
+            "inconsistentPassword": "必需跟新密碼一致"
+        }
+    },
+    "name": "名稱",
+    "nStep": "步驟 {{n}}",
+    "organization": {
+        "@": "組織",
+        "action": {
+            "setRole": "設定角色"
+        },
+        "members": "成員",
+        "msg": {
+            "confirmRemoveMember": "{{info}}, 您確定要移除這些成員?"
+        },
+        "role": {
+            "@": "角色",
+            "ADVANCED_MEMBER": "進階成員",
+            "MEMBER": "一般成員",
+            "SUPERVISOR": "組織主管"
+        },
+        "title": "{{name}} | 組織"
+    },
+    "owner": "擁有者",
+    "recentMessages": "最近的訊息",
+    "search": "搜尋",
+    "settings": "設定",
+    "systemFullName": "Coordinate Sphere",
+    "theme": {
+        "@": "主題",
+        "dark": "耀岩黑",
+        "light": "象牙白"
+    },
+    "time": {
+        "ago": "前",
+        "days": "天",
+        "hours": "小時",
+        "minutes": "分",
+        "months": "月",
+        "seconds": "秒",
+        "years": "年"
+    },
+    "timezone": {
+        "@": "時區"
+    },
+    "title": {
+        "confirm": "請確認",
+        "queryOrganizationUsers": "查詢組織 {{name}} 內的使用者",
+        "queryUsers": "查詢使用者"
+    },
+    "unknown": "未知",
+    "user": {
+        "@": "使用者",
+        "account": "帳號",
+        "displayName": "顯示名稱",
+        "password": "密碼"
+    },
+    "validator": {
+        "blank": "{{name}} 的值是空白的",
+        "bool": {
+            "type": "必需是布林型態",
+            "value": "必需是 {{bool}}"
+        },
+        "duplicated": "值 {{value}} 是重複的",
+        "email": "必需是一個有效的email格式",
+        "invalid": "無效",
+        "length": {
+            "between": "長度必需介於 {{min}} 和 {{max}}",
+            "max": "長度必需小於 {{max}}",
+            "min": "長度必需大於 {{min}}",
+            "type": "必需是字串或陣例",
+            "type-string": "必需是字串"
+        },
+        "number": {
+            "between": "必需介於 {{min}} 和 {{max}}",
+            "max": "必需小於 {{max}}",
+            "min": "必需大於 {{min}}",
+            "type": "必需是數值型態"
+        },
+        "regexp": {
+            "value": "必需符合正規表達式{{regexp}}"
+        },
+        "required": "必填"
+    },
+    "readonly": "唯讀"
+}

@@ -1,0 +1,33 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es6",
+        "noImplicitAny": true,
+        "useDefineForClassFields":true,
+        "experimentalDecorators": true,
+        "esModuleInterop": true,
+        "lib": [
+            "es6",
+            "dom"
+        ],
+        "jsx": "react",
+        "typeRoots": [
+            "node_modules/@types"
+        ],
+        "outDir": "build",
+        "declaration": true,
+        "sourceMap": false,
+        "baseUrl": ".",
+        "preserveSymlinks": true,
+        "skipLibCheck": true,//TODO MUIV5
+        "paths": {
+            "@mui/styled-engine": ["./node_modules/@mui/styled-engine-sc"],
+            "@onexas/sphere/*": ["src/sphere/*"]
+        }
+    },
+    "include": [
+        "src/sphere/**/*",
+        "jest/**/*.test.ts",
+        "jest/**/*.test.tsx"
+    ]
+}

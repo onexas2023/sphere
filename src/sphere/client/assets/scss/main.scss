@@ -1,0 +1,19 @@
+/*
+ * @file-created: 2023-03-22
+ * @copyright 2023 - 2023, OneXas
+ * @author: Dennis Chen
+ */ 
+
+#nprogress .bar,
+#nprogress .spinner {
+    z-index: 2000;
+}
+
+#nprogress .bar {
+    height: 4px;
+}
+
+.slow-fa-spin {
+    -webkit-animation: fa-spin 10s infinite linear;
+    animation: fa-spin 10s infinite linear;
+}

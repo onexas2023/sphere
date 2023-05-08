@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UITestSample Component render whole component matches snapshot 1`] = `
+<div
+  className="UITestSample-info-2"
+>
+  UITestSample Test Message
+</div>
+`;

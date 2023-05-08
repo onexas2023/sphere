@@ -1,0 +1,3 @@
+beta
+#put version stage at first line, e.g alpha, beta, rc, ga
+#see https://maven.apache.org/ref/3.0.3/maven-artifact/apidocs/org/apache/maven/artifact/versioning/ComparableVersion.html

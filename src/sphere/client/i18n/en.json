@@ -1,0 +1,200 @@
+{
+    "action": {
+        "add": "Add",
+        "cancel": "Cancel",
+        "close": "Close",
+        "create": "Create",
+        "delete": "Delete",
+        "edit": "Edit",
+        "fullscreen": "Fullscreen",
+        "link": "Link",
+        "more": "More",
+        "next": "Next",
+        "play": "Play",
+        "pause": "Pause",
+        "reload": "Reload",
+        "ok": "Ok",
+        "previous": "Previous",
+        "remove": "Remove",
+        "submit": "Submit",
+        "update": "Update",
+        "save": "Save",
+        "upload": "Upload",
+        "selectFile": "Select a file",
+        "addFile": "Add a file",
+        "newDirectory": "New a directory",
+        "replaceFile": "Replace a file",
+        "select": "Select",
+        "ignore": "Ignore",
+        "clipboard": "Copy to clipboard",
+        "apply": "Apply",
+        "download": "Download",
+        "view": "View",
+        "return": "Return",
+        "open": "Open",
+        "undo": "Undo",
+        "redo": "Redo"
+    },
+    "allExceptYou": "All selected, except you",
+    "backHome": "Back to Home",
+    "byte": "Byte",
+    "closedDateTime": "Closed Datetime",
+    "sphere": "Sphere",
+    "code": "Code",
+    "createdDateTime": "Created Datetime",
+    "updateddDateTime": "Updated Datetime",
+    "modifiedDateTime": "Modified Datetime",
+    "fileSize": "File size",
+    "description": "Description",
+    "domain": {
+        "@": "Domain",
+        "local": "Local"
+    },
+    "email": "Email",
+    "error": "Error",
+    "filter": "Filter",
+    "footer": {
+        "support": "Support",
+        "wecanhelp": "How Can We Help?"
+    },
+    "isYou": "is You",
+    "isYour": "is Your",
+    "languages": {
+        "@": "Languages",
+        "en": "English(United States)",
+        "zh-TW": "Chinese(Taiwan)/中文(台灣)"
+    },
+    "login": "Login",
+    "logout": "Logout",
+    "state": "State",
+    "status": "Status",
+    "msg": {
+        "addSuccess": "Add {{target}} success",
+        "allSelected": "All selected",
+        "authenticating": "Authenticating",
+        "authenticationFail": "Authenticatoion fail, Please check your account and password",
+        "autoReloadSecond": "Data will be reloaded every {{second}} seconds",
+        "cancelSuccess": "Cancel {{target}} success",
+        "contactAdmin": "Please contact the system adminstrator",
+        "createSuccess": "Create {{target}} success",
+        "deleteSuccess": "Delete {{target}} success",
+        "uploadSuccess": "Upload {{target}} success",
+        "uploadAbort": "Upload {{target}} aborted",
+        "emptyList": "The list is empty",
+        "internalError": "Interal Error",
+        "internalErrorHint": "Sorry, System have some internal error, please try later",
+        "lostAuthentication": "Lost authentication",
+        "lostAuthenticationHint": "Sorry, Something was wrong! please try to login again",
+        "noOptions": "No optations",
+        "noPermission": "No permission",
+        "noPermissionHint": "Sorry, you don't have the authority required!",
+        "nSelected": "{{n}} selected",
+        "nSelectedWithInfo": "{{n}} selected, {{info}}",
+        "pageNotFound": "Page Not Found",
+        "pageNotFoundHint": "Sorry, please check the url to the correct page",
+        "uiError": "Frontend Ui Error",
+        "uiErrorHint": "Sorry, there is an error in our frontend, please try it later",
+        "removeSuccess": "Remove {{target}} success",
+        "sayHi": "Hi, {{name}}",
+        "updateSuccess": "Update {{target}} success",
+        "jobRunning": "The job {{name}} is running",
+        "jobFinished": "The job {{name}} is finished",
+        "notTextFormat": "No a text format"
+    },
+    "myAccount": {
+        "@": "MyAccount",
+        "msg": {
+            "updatePasswordNoPermission": "No permission, the original password is maybe wrong"
+        },
+        "newPassword": "New Password",
+        "newPasswordConfirmation": "New Password Confirmation",
+        "oldPassword": "Old Password",
+        "pageSize": "Page size",
+        "preferences": "Preferences",
+        "profile": "Profile",
+        "validator": {
+            "inconsistentPassword": "Must same as then new password"
+        }
+    },
+    "name": "Name",
+    "nStep": "Step {{n}}",
+    "organization": {
+        "@": "Organization",
+        "action": {
+            "setRole": "Set to a role"
+        },
+        "members": "Members",
+        "msg": {
+            "confirmRemoveMember": "{{info}}, Are you sure you want to remove these members?"
+        },
+        "role": {
+            "@": "Role",
+            "ADVANCED_MEMBER": "Advanced Member",
+            "MEMBER": "Member",
+            "SUPERVISOR": "Supervisor"
+        },
+        "title": "{{name}} | Organization"
+    },
+    "owner": "Owner",
+    "recentMessages": "Recent Messages",
+    "search": "Search",
+    "settings": "Settings",
+    "systemFullName": "Coordinate Sphere",
+    "theme": {
+        "@": "Theme",
+        "dark": "Dark",
+        "light": "Light"
+    },
+    "time": {
+        "ago": "ago",
+        "days": "days",
+        "hours": "hours",
+        "minutes": "minutes",
+        "months": "months",
+        "seconds": "seconds",
+        "years": "years"
+    },
+    "timezone": {
+        "@": "Timezone"
+    },
+    "title": {
+        "confirm": "Please confirm",
+        "queryOrganizationUsers": "Query users in organization {{name}}",
+        "queryUsers": "Query users"
+    },
+    "unknown": "Unknown",
+    "user": {
+        "@": "User",
+        "account": "Account",
+        "displayName": "Display Name",
+        "password": "Password"
+    },
+    "validator": {
+        "blank": "The value of {{name}} is blank",
+        "bool": {
+            "type": "Must be a boolean type",
+            "value": "Must be {{bool}}"
+        },
+        "duplicated": "The value {{value}} is duplicated",
+        "email": "Must be a valid email format",
+        "invalid": "Invalid",
+        "length": {
+            "between": "Length must between {{min}} and {{max}}",
+            "max": "Length must smaller than {{max}}",
+            "min": "Length must greater than {{min}}",
+            "type": "Must be a string or array",
+            "type-string": "Must be a string"
+        },
+        "number": {
+            "between": "Must between {{min}} and {{max}}",
+            "max": "Must smaller than {{max}}",
+            "min": "Must greater than {{min}}",
+            "type": "Must be a number type"
+        },
+        "regexp": {
+            "value": "Must match regular-expression {{regexp}}"
+        },
+        "required": "Required"
+    },
+    "readonly": "Readonly"
+}

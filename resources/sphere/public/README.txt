@@ -1,0 +1,1 @@
+put public folder/files in public folder, these resources will be publish to build and bundle when release

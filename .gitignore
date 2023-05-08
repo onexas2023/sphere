@@ -1,0 +1,6 @@
+node_modules
+local.*
+build
+dist
+bundle
+.DS_Store
