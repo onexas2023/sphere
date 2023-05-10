@@ -4,14 +4,15 @@
  * @author: Dennis Chen
  */ 
 
-export const COOKIE_NAME_AUTH = 'XCD_AUTH';
-export const COOKIE_NAME_LOCALE = 'XCD_LOC';
-export const COOKIE_NAME_THEME = 'XCD_THEME';
+export const COOKIE_NAME_AUTH = 'sphere.auth';
+export const COOKIE_NAME_LOCALE = 'sphere.locale';
+export const COOKIE_NAME_THEME = 'sphere.theme';
 
-export const LOCAL_DEPOT_NAME_LAST_AID = 'XCD_LAID';
-export const LOCAL_DEPOT_NAME_PREFS = 'XCD_PREFS';
+export const LOCAL_DEPOT_NAME_LAST_AUID = 'sphere.last-auid';
+export const LOCAL_DEPOT_NAME_PRIVATE_PREFS = 'sphere.private-prefs';
+export const LOCAL_DEPOT_NAME_SHARED_PREFS = 'sphere.shared-prefs';
 
-export const SESSION_DEPOT_NAME_MENU = 'XCD_MENU';
+export const SESSION_DEPOT_NAME_MENU = 'sphere.menu';
 
 export const PARAM_BACK_PATH = 'backpath';
 

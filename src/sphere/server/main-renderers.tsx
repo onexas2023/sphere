@@ -125,7 +125,7 @@ class ServerCookies implements Cookies {
 }
 
 //a simple map implementtion for server request
-class ServerDepot implements Depot {
+class MapDepot implements Depot {
     map = new Map<string, string>();
 
     get(key: string, defaultVal?: string): string {
@@ -189,8 +189,8 @@ export function mainRenderer(
                 locale = parseRequestHeaderLanguage(req) || clientConfig.get(DEFAULT_LOCALE);
                 cookies.set(COOKIE_NAME_LOCALE, locale);
             }
-            const localDepot = new ServerDepot();
-            const sessionDepot = new ServerDepot();
+            const localDepot = new MapDepot();
+            const sessionDepot = new MapDepot();
 
             const collectModules: string[] = [];
             const collectSheets = new ServerStyleSheets();

@@ -31,7 +31,7 @@ export function makeStyles(theme: Theme) {
     const sc: CssStyles = {
         root: {
             // background: `url(${
-            //     theme.palette.mode === 'dark' ? BackgroundDarkImage : BackgroundLightImage
+            //     isDarkTheme(theme) ? BackgroundDarkImage : BackgroundLightImage
             // }) no-repeat top 0px left 0px`,
             backgroundSize: 'cover',
             minHeight: '50vh',

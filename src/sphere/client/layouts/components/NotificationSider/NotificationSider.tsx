@@ -27,6 +27,7 @@ import {
 } from '@onexas/sphere/client/icons';
 import { PATH_LOGIN, PATH_MY_ACCOUNT } from '@onexas/sphere/client/routes';
 import { WorkspaceStore } from '@onexas/sphere/client/stores';
+import { isDarkTheme } from '@onexas/sphere/client/styles';
 import { CssClass, CssStyle, MessageLevel, Theme } from '@onexas/sphere/client/types';
 import { fromNow } from '@onexas/sphere/client/utils/datetime';
 import clsx from 'clsx';
@@ -48,7 +49,7 @@ type CssStyles = CssRules<CssStyle>;
 type CssClasses = CssRules<CssClass>;
 
 function makeStyles(theme: Theme) {
-    const dark = theme.palette.mode === 'dark';
+    const dark = isDarkTheme(theme);
     const bgColor = new Color(theme.sphere.portal.bgColor);
     const siderWidth = theme.sphere.notificationSider.width;
     const { minHeight } = theme.sphere.appbar;

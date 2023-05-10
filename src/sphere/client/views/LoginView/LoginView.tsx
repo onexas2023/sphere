@@ -25,6 +25,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import createStyles from '@mui/styles/createStyles';
 import withStyles from '@mui/styles/withStyles';
+import { isDarkTheme } from '@onexas/sphere/client/styles';
 import { Theme } from '@onexas/sphere/client/types';
 import clsx from 'clsx';
 import Color from 'color';
@@ -48,8 +49,7 @@ type CssClasses = CssRules<CssClass>;
 
 function makeStyles(theme: Theme) {
     const pmainColor = Color(theme.palette.primary.main);
-    const bgColor = theme.sphere.portal.bgColor;
-    const textColor = Color(theme.sphere.portal.textColor);
+    const dark = isDarkTheme(theme);
     const style: CssStyles = {
         root: {
             minHeight: '100vh',
@@ -96,7 +96,7 @@ function makeStyles(theme: Theme) {
             alignItems: 'end',
             padding: theme.spacing(10, 10, 2),
             width: 480,
-            backgroundColor: "#fffffffa"
+            backgroundColor: dark?"#000000fa":"#fffffffa"
         },
         error: {
             minHeight: 32,
@@ -225,13 +225,15 @@ class LoginView extends React.PureComponent<LoginViewProps> {
     onChangeDomain = (e: React.ChangeEvent<HTMLInputElement>) => {
         const {
             validator,
-            props: { loginStore },
+            props: { loginStore, workspaceStore },
         } = this;
         const { value } = e.target;
 
         validator.clear('result');
         validator.clear('domain');
         loginStore.domain = value;
+        workspaceStore.loginDomain = value;
+        
     };
 
     render() {
