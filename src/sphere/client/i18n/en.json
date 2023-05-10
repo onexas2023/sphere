@@ -99,7 +99,8 @@
         "updateSuccess": "Update {{target}} success",
         "jobRunning": "The job {{name}} is running",
         "jobFinished": "The job {{name}} is finished",
-        "notTextFormat": "No a text format"
+        "notTextFormat": "No a text format",
+        "onlyLocalDomainUpdatePassword": "Only a local domain user can update his password here"
     },
     "myAccount": {
         "@": "MyAccount",
