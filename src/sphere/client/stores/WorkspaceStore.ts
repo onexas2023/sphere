@@ -8,6 +8,7 @@ import {
     Authentication,
     buildApiConfiguration,
     CoordinateAuthApi,
+    DOMAIN_LOCAL,
 } from '@onexas/sphere/client/api';
 import { PATH_LOGIN } from '@onexas/sphere/client/config';
 import { SUPPORTED_LOCALES, SUPPORTED_TIMEZONES } from '@onexas/sphere/client/config/config';
@@ -15,8 +16,9 @@ import {
     COOKIE_NAME_AUTH,
     COOKIE_NAME_LOCALE,
     COOKIE_NAME_THEME,
-    LOCAL_DEPOT_NAME_LAST_AID,
-    LOCAL_DEPOT_NAME_PREFS,
+    LOCAL_DEPOT_NAME_LAST_AUID,
+    LOCAL_DEPOT_NAME_PRIVATE_PREFS,
+    LOCAL_DEPOT_NAME_SHARED_PREFS,
     PARAM_BACK_PATH,
     SESSION_DEPOT_NAME_MENU,
 } from '@onexas/sphere/client/constants';
@@ -49,7 +51,7 @@ type FilterObserverWrap = {
     observer?: FilterObserver;
 };
 
-type Preferences = {
+type PrivitePreferences = {
     pageSize: number;
     dateFormat: string;
     timeFormat: string;
@@ -57,6 +59,9 @@ type Preferences = {
     timezone: string;
     autoReloadSecond: number;
     vingReloadSecond: number;
+};
+type SharedPreferences = {
+    loginDomain: string;
 };
 
 interface SearchParams {
@@ -79,10 +84,10 @@ class SearchParamsImpl implements SearchParams {
 
 //clear after logout or different user alias
 const LOGOUT_COOKIE_CLEAR_LIST = [COOKIE_NAME_AUTH, COOKIE_NAME_LOCALE, COOKIE_NAME_THEME];
-const LOGOUT_LOCAL_DEPOT_CLEAR_LIST = [LOCAL_DEPOT_NAME_LAST_AID, LOCAL_DEPOT_NAME_PREFS];
+const LOGOUT_LOCAL_DEPOT_CLEAR_LIST = [LOCAL_DEPOT_NAME_LAST_AUID, LOCAL_DEPOT_NAME_PRIVATE_PREFS];
 const LOGOUT_SESSION_DEPOT_CLEAR_LIST = [SESSION_DEPOT_NAME_MENU];
 
-const defaultPreferences: Preferences = {
+const defaultPrivitePreferences: PrivitePreferences = {
     pageSize: 20,
     dateFormat: 'YYYY/MM/DD',
     timeFormat: 'HH:mm',
@@ -90,6 +95,9 @@ const defaultPreferences: Preferences = {
     timezone: envTimezoneName,
     autoReloadSecond: 10,
     vingReloadSecond: 5,
+};
+const defaultSharedPreferences: SharedPreferences = {
+    loginDomain: DOMAIN_LOCAL
 };
 
 export default class WorkspaceStore extends AbstractStore {
@@ -117,7 +125,10 @@ export default class WorkspaceStore extends AbstractStore {
     private _windowLocation: Location;
 
     @observable
-    private _preferences: Preferences;
+    private _privatePreferences: PrivitePreferences;
+
+    @observable
+    private _sharedPreferences: SharedPreferences;
 
     readonly supportedLocales: string[];
     readonly supportedTimezones: string[];
@@ -129,47 +140,47 @@ export default class WorkspaceStore extends AbstractStore {
 
     @computed
     get preferredPageSize() {
-        return this._preferences.pageSize;
+        return this._privatePreferences.pageSize;
     }
     set preferredPageSize(preferredPageSize: number) {
-        this.updatePreferences({ ...this._preferences, pageSize: preferredPageSize });
+        this.updatePrivitePreferences({ ...this._privatePreferences, pageSize: preferredPageSize });
     }
 
     @computed
     get preferredAutoReloadSecond() {
-        return this._preferences.autoReloadSecond;
+        return this._privatePreferences.autoReloadSecond;
     }
     set preferredAutoReloadSecond(preferredAutoReloadSecond: number) {
-        this.updatePreferences({
-            ...this._preferences,
+        this.updatePrivitePreferences({
+            ...this._privatePreferences,
             autoReloadSecond: preferredAutoReloadSecond,
         });
     }
 
     @computed
     get preferredVingReloadSecond() {
-        return this._preferences.vingReloadSecond;
+        return this._privatePreferences.vingReloadSecond;
     }
     set preferredVingReloadSecond(preferredVingReloadSecond: number) {
-        this.updatePreferences({
-            ...this._preferences,
+        this.updatePrivitePreferences({
+            ...this._privatePreferences,
             vingReloadSecond: preferredVingReloadSecond,
         });
     }
     @computed
     get preferredDateFormat() {
-        return this._preferences.dateFormat;
+        return this._privatePreferences.dateFormat;
     }
     set preferredDateFormat(preferredDateFormat: string) {
-        this.updatePreferences({ ...this._preferences, dateFormat: preferredDateFormat });
+        this.updatePrivitePreferences({ ...this._privatePreferences, dateFormat: preferredDateFormat });
     }
 
     @computed
     get preferredTimeFormat() {
-        return this._preferences.timeFormat;
+        return this._privatePreferences.timeFormat;
     }
     set preferredTimeFormat(preferredTimeFormat: string) {
-        this.updatePreferences({ ...this._preferences, timeFormat: preferredTimeFormat });
+        this.updatePrivitePreferences({ ...this._privatePreferences, timeFormat: preferredTimeFormat });
     }
 
     @computed
@@ -179,21 +190,29 @@ export default class WorkspaceStore extends AbstractStore {
 
     @computed
     get preferredTimeSecondFormat() {
-        return this._preferences.timeSecondFormat;
+        return this._privatePreferences.timeSecondFormat;
     }
     set preferredTimeSecondFormat(preferredTimeSecondFormat: string) {
-        this.updatePreferences({
-            ...this._preferences,
+        this.updatePrivitePreferences({
+            ...this._privatePreferences,
             timeSecondFormat: preferredTimeSecondFormat,
         });
     }
 
     @computed
     get preferredTimezone() {
-        return this._preferences.timezone;
+        return this._privatePreferences.timezone;
     }
     set preferredTimezone(timezone: string) {
-        this.updatePreferences({ ...this._preferences, timezone: timezone });
+        this.updatePrivitePreferences({ ...this._privatePreferences, timezone });
+    }
+
+    @computed
+    get loginDomain() {
+        return this._sharedPreferences.loginDomain;
+    }
+    set loginDomain(loginDomain: string) {
+        this.updateSharedPreferences({ ...this._sharedPreferences, loginDomain });
     }
 
     @computed
@@ -221,22 +240,39 @@ export default class WorkspaceStore extends AbstractStore {
         c = this.config.get(SUPPORTED_TIMEZONES);
         this.supportedTimezones = c ? c.split(',') : envTimezoneNames;
 
-        const prefs = this.localDepot.get(LOCAL_DEPOT_NAME_PREFS);
-        if (prefs) {
+        const privatePrefs = this.localDepot.get(LOCAL_DEPOT_NAME_PRIVATE_PREFS);
+        if (privatePrefs) {
             try {
-                const obj = JSON.parse(basex58.decode(prefs).toString('utf8'));
-                const pp = { ...defaultPreferences } as any;
+                const obj = JSON.parse(basex58.decode(privatePrefs).toString('utf8'));
+                const pp = { ...defaultPrivitePreferences } as any;
                 for (const p in pp) {
                     pp[p] = obj[p] ? obj[p] : pp[p];
                 }
-                this._preferences = pp;
+                this._privatePreferences = pp;
             } catch (e) {
                 logger.warn(e);
             }
         } else {
-            this._preferences = { ...defaultPreferences };
+            this._privatePreferences = { ...defaultPrivitePreferences };
         }
-        logger.debug('preferences', this._preferences);
+        logger.debug('private preferences', this._privatePreferences);
+
+        const sharedPrefs = this.localDepot.get(LOCAL_DEPOT_NAME_SHARED_PREFS);
+        if (sharedPrefs) {
+            try {
+                const obj = JSON.parse(basex58.decode(sharedPrefs).toString('utf8'));
+                const pp = { ...defaultSharedPreferences } as any;
+                for (const p in pp) {
+                    pp[p] = obj[p] ? obj[p] : pp[p];
+                }
+                this._sharedPreferences = pp;
+            } catch (e) {
+                logger.warn(e);
+            }
+        } else {
+            this._sharedPreferences = { ...defaultSharedPreferences };
+        }
+        logger.debug('shared preferences', this._sharedPreferences);
 
         this._urlSearchParams = new SearchParamsImpl();
         this._windowLocation = hasWindow && window.location;
@@ -255,7 +291,9 @@ export default class WorkspaceStore extends AbstractStore {
             this.sessionDepot.remove(n);
         });
 
-        this._preferences = { ...defaultPreferences };
+        this._privatePreferences = { ...defaultPrivitePreferences };
+        
+        //no need to clear shared preference
     }
 
     async logout(backpath?: string) {
@@ -280,11 +318,11 @@ export default class WorkspaceStore extends AbstractStore {
                 },
             })
             .then((res) => {
-                if (res.aliasUid !== this.localDepot.get(LOCAL_DEPOT_NAME_LAST_AID)) {
+                if (res.aliasUid !== this.localDepot.get(LOCAL_DEPOT_NAME_LAST_AUID)) {
                     this.clearUserData();
                 }
                 this.cookies.set(COOKIE_NAME_AUTH, res.token);
-                this.localDepot.set(LOCAL_DEPOT_NAME_LAST_AID, res.aliasUid);
+                this.localDepot.set(LOCAL_DEPOT_NAME_LAST_AUID, res.aliasUid);
                 this.authentication = res;
             });
     }
@@ -313,11 +351,11 @@ export default class WorkspaceStore extends AbstractStore {
                     },
                 })
                 .then((res) => {
-                    if (res.aliasUid !== this.localDepot.get(LOCAL_DEPOT_NAME_LAST_AID)) {
+                    if (res.aliasUid !== this.localDepot.get(LOCAL_DEPOT_NAME_LAST_AUID)) {
                         this.clearUserData();
                     }
                     this.cookies.set(COOKIE_NAME_AUTH, res.token);
-                    this.localDepot.set(LOCAL_DEPOT_NAME_LAST_AID, res.aliasUid);
+                    this.localDepot.set(LOCAL_DEPOT_NAME_LAST_AUID, res.aliasUid);
                     this.authentication = res;
                 });
         } else {
@@ -346,10 +384,18 @@ export default class WorkspaceStore extends AbstractStore {
         this.messages = this.messages.filter((m) => m.key !== key);
     }
 
-    private updatePreferences(preferences: Preferences) {
-        this._preferences = preferences;
+    private updatePrivitePreferences(preferences: PrivitePreferences) {
+        this._privatePreferences = preferences;
         this.localDepot.set(
-            LOCAL_DEPOT_NAME_PREFS,
+            LOCAL_DEPOT_NAME_PRIVATE_PREFS,
+            basex58.encode(Buffer.from(JSON.stringify(preferences), 'utf8'))
+        );
+    }
+
+    private updateSharedPreferences(preferences: SharedPreferences) {
+        this._sharedPreferences = preferences;
+        this.localDepot.set(
+            LOCAL_DEPOT_NAME_SHARED_PREFS,
             basex58.encode(Buffer.from(JSON.stringify(preferences), 'utf8'))
         );
     }

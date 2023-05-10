@@ -110,7 +110,7 @@ export function getLayoutStyles(theme: Theme) {
         },
         layoutBackground: {
             // background: `url(${
-            //     theme.palette.mode === 'dark' ? BackgroundDarkImage : BackgroundLightImage
+            //     isDarkTheme(theme) ? BackgroundDarkImage : BackgroundLightImage
             // }) no-repeat top 0px left 0px`,
             // backgroundSize: 'cover',
             minHeight: '60vh',
@@ -1072,4 +1072,8 @@ export function isMatchMedia(query: string): boolean {
         return matchMedia(query).matches;
     }
     return false;
+}
+
+export function isDarkTheme(theme: Theme){
+    return theme.palette.mode === 'dark';
 }

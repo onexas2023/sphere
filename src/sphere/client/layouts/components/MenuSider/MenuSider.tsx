@@ -22,7 +22,7 @@ import { AppContext } from '@onexas/sphere/client/context';
 import { FontAwesomeIcon, FontAwesomeIconProp } from '@onexas/sphere/client/icons';
 import { Menu } from '@onexas/sphere/client/menus';
 import { BreadcrumbStore, MenuStore, WorkspaceStore } from '@onexas/sphere/client/stores';
-import { isWidthDown } from '@onexas/sphere/client/styles';
+import { isDarkTheme, isWidthDown } from '@onexas/sphere/client/styles';
 import { CssClass, CssStyle, hasWindow, Theme } from '@onexas/sphere/client/types';
 import { typeOfFunction, typeOfString } from '@onexas/sphere/client/utils/object';
 import clsx from 'clsx';
@@ -56,8 +56,7 @@ function makeStyles(theme: Theme) {
     const { textColor: appbarTextColor, iconSize: appbarIconSize, minHeight: appbarMinHeight } = theme.sphere.appbar;
     const appbarBgColor = new Color(theme.sphere.appbar.bgColor);
 
-    const dark = theme.palette.mode === 'dark';
-
+    const dark = isDarkTheme(theme);
 
     const style: CssStyles = {
         root: {

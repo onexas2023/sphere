@@ -53,7 +53,7 @@ export default class LoginStore extends AbstractStore {
     reset() {
         this.account = '';
         this.password = '';
-        this.domain = DOMAIN_LOCAL;
+        this.domain = this.storeHolder.get(WorkspaceStore).loginDomain || DOMAIN_LOCAL;
         this.errors = {
             account: '',
             password: '',

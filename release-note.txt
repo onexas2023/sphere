@@ -9,7 +9,8 @@
  * Improvements
 
  * Fixed Bugs
-    
+    * XAS-1 Don't allow password update of a domain user
+
  * Upgrade Notes
     
 -------------------------------------------

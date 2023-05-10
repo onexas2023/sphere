@@ -2,8 +2,14 @@
  * @file-created: 2023-03-22
  * @copyright 2023 - 2023, OneXas
  * @author: Dennis Chen
- */ 
-
+ */
+import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import {
+    DOMAIN_LOCAL,
+} from '@onexas/sphere/client/api';
 import { VisibilityAdornment } from '@onexas/sphere/client/components/misc';
 import { AppContext } from '@onexas/sphere/client/context';
 import { MyAccountStore, WorkspaceStore } from '@onexas/sphere/client/stores';
@@ -15,9 +21,6 @@ import {
     TrueValidate,
     Validator,
 } from '@onexas/sphere/client/utils/validator';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import { makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import React from 'react';
@@ -149,11 +152,13 @@ class Password extends React.PureComponent<PasswordProps> {
         const {
             myAccountStore,
             myAccountStore: { updatingPassword: updating },
+            workspaceStore: { authentication },
         } = this.props;
         const {
             appTheme: { classes },
             i18n,
         } = this.context;
+        const local = DOMAIN_LOCAL === authentication.domain;
         const { newPasswordVisible, oldPasswordVisible } = this;
         return (
             <form
@@ -167,11 +172,17 @@ class Password extends React.PureComponent<PasswordProps> {
                     defaultValue={myAccountStore.account}
                     style={{ display: 'none' }}
                 />
+                {!local && <Alert
+                    severity='info'
+                    className={classes.fullWidth}>
+                    {i18n.l(`msg.onlyLocalDomainUpdatePassword`)}
+                </Alert>}
                 <TextField
                     type={oldPasswordVisible ? 'text' : 'password'}
                     label={i18n.l('myAccount.oldPassword')}
                     fullWidth
                     required
+                    disabled={!local}
                     className={classes.formTextField}
                     error={!!myAccountStore.errors.oldPassword}
                     helperText={myAccountStore.errors.oldPassword}
@@ -192,6 +203,7 @@ class Password extends React.PureComponent<PasswordProps> {
                     label={i18n.l('myAccount.newPassword')}
                     fullWidth
                     required
+                    disabled={!local}
                     className={classes.formTextField}
                     autoComplete="new-password"
                     error={!!myAccountStore.errors.newPassword}
@@ -212,6 +224,7 @@ class Password extends React.PureComponent<PasswordProps> {
                     label={i18n.l('myAccount.newPasswordConfirmation')}
                     fullWidth
                     required
+                    disabled={!local}
                     className={classes.formTextField}
                     autoComplete="off"
                     error={!!myAccountStore.errors.newPasswordConfirmation}
@@ -220,7 +233,7 @@ class Password extends React.PureComponent<PasswordProps> {
                     onChange={this.onChangeNewPasswordConfirmation}
                 />
                 <Box className={classes.formBtnBox}>
-                    <Button color="primary" variant="contained" type="submit" disabled={updating}>
+                    <Button color="primary" variant="contained" type="submit" disabled={updating || !local}>
                         {i18n.l('action.update')}
                     </Button>
                 </Box>

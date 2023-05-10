@@ -99,7 +99,8 @@
         "updateSuccess": "更新 {{target}} 成功",
         "jobRunning": "工作 {{name}} 執行中",
         "jobFinished": "工作 {{name}} 已結束",
-        "notTextFormat": "不是文字格式"
+        "notTextFormat": "不是文字格式",
+        "onlyLocalDomainUpdatePassword": "只有本地登入領域的使用者能在這裏修改密碼"
     },
     "myAccount": {
         "@": "我的帳號",
