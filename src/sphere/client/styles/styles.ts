@@ -1073,7 +1073,56 @@ export function isMatchMedia(query: string): boolean {
     }
     return false;
 }
-
 export function isDarkTheme(theme: Theme){
     return theme.palette.mode === 'dark';
+}
+
+export function getBoxPassedStyle(theme: Theme) {
+    const style: React.CSSProperties = {
+        color: theme.palette.getContrastText(theme.palette.success.main),
+        backgroundColor: theme.palette.success.main,
+    }
+    return style;
+}
+export function getBoxUnknownStyle(theme: Theme) {
+    const style: React.CSSProperties = {
+        color: theme.palette.getContrastText(theme.palette.unknown.main),
+        backgroundColor: theme.palette.unknown.main,
+    }
+    return style;
+}
+export function getBoxErrorStyle(theme: Theme) {
+    const style: React.CSSProperties = {
+        color: theme.palette.getContrastText(theme.palette.error.main),
+        backgroundColor: theme.palette.error.main,
+    }
+    return style;
+}
+export function getBoxWarnStyle(theme: Theme) {
+    const style: React.CSSProperties = {
+        color: theme.palette.getContrastText(theme.palette.warning.main),
+        backgroundColor: theme.palette.warning.main,
+    }
+    return style;
+}
+export function getBoxInfoStyle(theme: Theme) {
+    const style: React.CSSProperties = {
+        color: theme.palette.getContrastText(theme.palette.info.main),
+        backgroundColor: theme.palette.info.main,
+    }
+    return style;
+}
+export function getBoxActiveStyle(theme: Theme) {
+    const style: React.CSSProperties = {
+        color: theme.palette.getContrastText(theme.palette.primary.main),
+        backgroundColor: theme.palette.primary.main,
+    }
+    return style;
+}
+export function getBoxPassiveStyle(theme: Theme) {
+    const style: React.CSSProperties = {
+        color: theme.palette.getContrastText(theme.palette.unknown.main),
+        backgroundColor: theme.palette.unknown.main,
+    }
+    return style;
 }

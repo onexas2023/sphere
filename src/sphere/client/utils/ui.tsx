@@ -4,19 +4,16 @@
  * @author: Dennis Chen
  */ 
 
-import { fasCheckCircle } from '@onexas/sphere/client/icons';
-import { fasExclamationCircle } from '@onexas/sphere/client/icons';
-import { fasSpinner } from '@onexas/sphere/client/icons';
-import { FontAwesomeIcon } from '@onexas/sphere/client/icons';
+import InputAdornment from '@mui/material/InputAdornment';
 import { DEFAULT_PROGRESS_DEFERRED } from '@onexas/sphere/client/constants';
+import { FontAwesomeIcon, fasCheckCircle, fasExclamationTriangle, fasSpinner } from '@onexas/sphere/client/icons';
 import { CssClasses } from '@onexas/sphere/client/styles';
 import { hasWindow } from '@onexas/sphere/client/types';
-import InputAdornment from '@mui/material/InputAdornment';
 import nprogress from 'nprogress';
 import React from 'react';
-import { AppError, cancelableSequential, parallel, PromiseProcess } from './app';
-import { uuid } from './uid';
 import { setTimeout } from 'timers';
+import { AppError, PromiseProcess, cancelableSequential, parallel } from './app';
+import { uuid } from './uid';
 
 let progress = 0;
 
@@ -416,7 +413,7 @@ export function CheckAvailableAdornment(props: {
                 if (checking) {
                     return <FontAwesomeIcon icon={fasSpinner} spin={checking} size={size} />;
                 }
-                if (available === null) {
+                if (available === null || available === undefined) {
                     return (
                         <FontAwesomeIcon
                             icon={fasSpinner}
@@ -435,8 +432,8 @@ export function CheckAvailableAdornment(props: {
                 } else {
                     return (
                         <FontAwesomeIcon
-                            icon={fasExclamationCircle}
-                            className={classes.statusError}
+                            icon={fasExclamationTriangle}
+                            className={classes.statusWarn}
                             size={size}
                         />
                     );

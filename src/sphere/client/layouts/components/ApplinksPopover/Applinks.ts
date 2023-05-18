@@ -32,7 +32,7 @@ export class Applinks {
                 const name = i18n.l(config.get(s + '.name', m));
                 const image = config.get(s + '.image');
                 const href = config.get(s + '.href');
-                const altHerfs = config.get(s + '.alt-hrefs')?.split(",").filter((e) => e);
+                const altHerfs = config.get(s + '.alt-hrefs')?.split(",").map(s=>s.trim()).filter((e) => e);
                 this.links.push({
                     name,
                     image,
