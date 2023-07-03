@@ -1,6 +1,19 @@
 -------------------------------------------
  OneXas - Sphere Release Notes
 -------------------------------------------
+ 1.1.0-ga
+ --------
+ * New Features
+
+ * Improvements
+
+ * Fixed Bugs
+
+ * Upgrade Notes
+    
+-------------------------------------------
+ History
+-------------------------------------------
  1.0.0-beta
  --------
  * New Features
@@ -11,10 +24,5 @@
  * Fixed Bugs
     * XAS-1 Don't allow password update of a domain user
 
- * Upgrade Notes
-    
--------------------------------------------
- History
--------------------------------------------
- 
+ * Upgrade Notes 
  
