@@ -19,6 +19,7 @@ export { faFileUpload as fasFileUpload } from '@fortawesome/free-solid-svg-icons
 export { faUpload as fasUpload } from '@fortawesome/free-solid-svg-icons/faUpload';
 export { faStamp as fasStamp } from '@fortawesome/free-solid-svg-icons/faStamp';
 export { faPaperclip as fasPaperclip } from '@fortawesome/free-solid-svg-icons/faPaperclip';
+export { faFilter as fasFilter } from '@fortawesome/free-solid-svg-icons/faFilter';
 export { faBlackTie as fabBlackTie } from '@fortawesome/free-brands-svg-icons/faBlackTie';
 export { faDocker as fabDocker } from '@fortawesome/free-brands-svg-icons/faDocker';
 export { faClock as farClock } from '@fortawesome/free-regular-svg-icons/faClock';
