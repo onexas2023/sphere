@@ -42,11 +42,33 @@ describe('utils/object test', () => {
         expect(coerceToString('124')).toMatchSnapshot();
     });
 
-    it('test mregeDeep ', () => {
+    it('test meregeDeep ', () => {
         const a = { name: 'dennis', address: { street: 'main' } };
         const b = { age: 24 };
-        const c = mergeDeep({}, a, b);
-        const d = mergeDeep(a, b);
+        const c = mergeDeep<any>({}, a, b);
+        const d = mergeDeep<any>(a, b);
+
+        expect(c.name === 'dennis').toBeTruthy();
+        expect(c.age === 24).toBeTruthy();
+        expect(c.address.street === 'main').toBeTruthy();
+
+        expect(d.name === 'dennis').toBeTruthy();
+        expect(d.age === 24).toBeTruthy();
+        expect(d.address.street === 'main').toBeTruthy();
+        expect(d === a).toBeTruthy();
+    });
+
+    type Type1 = {
+        name?: string;
+        age?: number;
+        address? :any;
+    }
+
+    it('test mergeDeep type', () => {
+        const a = { name: 'dennis', address: { street: 'main' } } as Type1;
+        const b = { age: 24 }  as Type1;
+        const c = mergeDeep<Type1>({}, a, b);
+        const d = mergeDeep<Type1>(a, b);
 
         expect(c.name === 'dennis').toBeTruthy();
         expect(c.age === 24).toBeTruthy();

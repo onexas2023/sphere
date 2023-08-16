@@ -113,8 +113,8 @@ export function trim(value: any, defval = '') {
     return defval;
 }
 
-export function mergeDeep(target: any, ...sources: any[]) {
-    if (!sources.length) return target;
+export function mergeDeep<T>(target: Partial<T>, ...sources: Partial<T>[]): T {
+    if (!sources.length) return target as T;
     const source = sources.shift();
 
     if (typeOfObject(target) && typeOfObject(source)) {
@@ -128,5 +128,5 @@ export function mergeDeep(target: any, ...sources: any[]) {
         }
     }
     mergeDeep(target, ...sources);
-    return target;
+    return target as T;
 }
