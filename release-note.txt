@@ -1,7 +1,20 @@
 -------------------------------------------
  OneXas - Sphere Release Notes
 -------------------------------------------
- 1.1.0-ga
+ 1.2.0
+ --------
+ * New Features  
+       
+ * Improvements	
+          
+ * Fixed Bugs
+   
+ * Upgrade Notes   
+    
+-------------------------------------------
+ History
+-------------------------------------------
+ 1.1.0
  --------
  * New Features
 
@@ -10,11 +23,8 @@
  * Fixed Bugs
 
  * Upgrade Notes
-    
--------------------------------------------
- History
--------------------------------------------
- 1.0.0-beta
+ 
+ 1.0.0
  --------
  * New Features
    * Support Sphere, a general frontend for user accesses Coordinate APIs
