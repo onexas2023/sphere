@@ -16,7 +16,6 @@ import {
 import { I18nLoaderRegister, I18nRegister } from '@onexas/sphere/client/i18n';
 import EmptyLayout from '@onexas/sphere/client/layouts/EmptyLayout';
 import MainLayout from '@onexas/sphere/client/layouts/MainLayout';
-import FullLayout from '@onexas/sphere/client/layouts/FullLayout';
 import { MenuGroup, MenuRegister } from '@onexas/sphere/client/menus/menus';
 import { RouteRegister } from '@onexas/sphere/client/routes';
 import {
@@ -62,6 +61,15 @@ const logger = getLogger('startup');
 //     loading: LoadingModule,
 //     modules: ['@onexas/sphere/client/views/LayoutDemoView'],
 // });
+
+const DevView = Loadable({
+    loader: () =>
+        import(
+            /* webpackChunkName: "loadable-dev" */ '@onexas/sphere/client/views/DevView'
+        ),
+    loading: LoadingModule,
+    modules: ['@onexas/sphere/client/views/DevView'],
+});
 
 const LoginView = Loadable({
     loader: () =>
@@ -217,6 +225,15 @@ export const startup: Startup = function (context: StartupContext) {
     //     exact: true,
     //     view: LayoutDemoView,
     //     layout: FullLayout,
+    //     authMode: AuthMode.NotCare,
+    //     storeNames: [],
+    // });
+
+    // routeRegister.register({
+    //     path: '/dev',
+    //     exact: true,
+    //     view: DevView,
+    //     layout: EmptyLayout,
     //     authMode: AuthMode.NotCare,
     //     storeNames: [],
     // });

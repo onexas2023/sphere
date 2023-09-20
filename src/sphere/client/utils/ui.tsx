@@ -507,7 +507,7 @@ export function uploadProxy(callback: (uploaded: File, content: Uint8Array) => v
     };
 }
 
-export function uploadProxyX(
+export function uploadProxyAdv(
     handleOnLoad: (file: File, content: Uint8Array, crunkIdx: number) => Promise<void>,
     onEof: (file: File) => void,
     option?: {
@@ -562,6 +562,9 @@ export function uploadProxyX(
         }
     };
 }
+
+//backward compatible
+export const uploadProxyX = uploadProxyAdv;
 
 export function copyToClipboard(text: string) {
     const listener = (e: ClipboardEvent) => {
