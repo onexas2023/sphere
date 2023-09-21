@@ -4,7 +4,8 @@
  1.2.0
  --------
  * New Features  
-       
+   * XAS-84 Support file drag upload
+
  * Improvements	
           
  * Fixed Bugs
