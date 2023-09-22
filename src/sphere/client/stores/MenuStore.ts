@@ -15,8 +15,9 @@ import { StoreCreateContext } from './register';
 
 const logger = getLogger('store.menu');
 
-type CookieMemo = {
+type MenuPrefs = {
     open: boolean;
+    // width?: number;//TODO
 };
 
 export default class MenuStore extends AbstractStore {
@@ -26,7 +27,7 @@ export default class MenuStore extends AbstractStore {
     private _groups: MenuGroup[];
 
     @observable
-    private _memo: CookieMemo = {
+    private _prefs: MenuPrefs = {
         open: false,
     };
 
@@ -51,15 +52,15 @@ export default class MenuStore extends AbstractStore {
     constructor(param: StoreCreateContext) {
         super(param);
 
-        const memo = this.sessionDepot.get(SESSION_DEPOT_NAME_MENU);
-        if (memo) {
+        const text = this.sessionDepot.get(SESSION_DEPOT_NAME_MENU);
+        if (text) {
             try {
-                const obj = JSON.parse(basex58.decode(memo).toString('utf8'));
-                const pp = { ...this._memo } as any;
+                const obj = JSON.parse(basex58.decode(text).toString('utf8'));
+                const pp = { ...this._prefs } as any;
                 for (const p in pp) {
                     pp[p] = obj[p] ? obj[p] : pp[p];
                 }
-                this._memo = pp;
+                this._prefs = pp;
             } catch (e) {
                 logger.warn(e);
             }
@@ -89,17 +90,17 @@ export default class MenuStore extends AbstractStore {
     }
     @computed
     get open() {
-        return this._memo.open;
+        return this._prefs.open;
     }
     set open(open: boolean) {
-        this.updateMemo({ ...this._memo, open });
+        this.updatePrefs({ ...this._prefs, open });
     }
 
-    private updateMemo(memo: CookieMemo) {
-        this._memo = memo;
+    private updatePrefs(prefs: MenuPrefs) {
+        this._prefs = prefs;
         this.sessionDepot.set(
             SESSION_DEPOT_NAME_MENU,
-            basex58.encode(Buffer.from(JSON.stringify(memo), 'utf8'))
+            basex58.encode(Buffer.from(JSON.stringify(prefs), 'utf8'))
         );
     }
 

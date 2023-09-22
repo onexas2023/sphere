@@ -43,7 +43,7 @@
         "@mui/material": "^5.11.15",
         "@mui/styled-engine-sc": "^5.11.11",
         "@mui/styles": "^5.11.13",
-        "@onexas/coordinate-api-sdk-typescript": "^1.2.0-20230919-SNAPSHOT.T1411",
+        "@onexas/coordinate-api-sdk-typescript": "^1.2.0-20230922-SNAPSHOT.T1906",
         "@onexas/react-loadable": "^17.0.0-rc.1",
         "base-x": "^3.0.7",
         "color": "^3.1.3",

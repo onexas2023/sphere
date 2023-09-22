@@ -8,17 +8,18 @@ import {
     Authentication,
     buildApiConfiguration,
     CoordinateAuthApi,
+    CoordinatePreferenceApi,
     DOMAIN_LOCAL,
 } from '@onexas/sphere/client/api';
 import { PATH_LOGIN } from '@onexas/sphere/client/config';
-import { SUPPORTED_LOCALES, SUPPORTED_TIMEZONES } from '@onexas/sphere/client/config/config';
+import { DEFAULT_LOCALE, DEFAULT_THEME, SUPPORTED_LOCALES, SUPPORTED_TIMEZONES } from '@onexas/sphere/client/config/config';
 import {
     COOKIE_NAME_AUTH,
     COOKIE_NAME_LOCALE,
     COOKIE_NAME_THEME,
     LOCAL_DEPOT_NAME_LAST_AUID,
-    LOCAL_DEPOT_NAME_PRIVATE_PREFS,
-    LOCAL_DEPOT_NAME_SHARED_PREFS,
+    LOCAL_DEPOT_NAME_PRI_PREFS,
+    LOCAL_DEPOT_NAME_PUB_PREFS,
     PARAM_BACK_PATH,
     SESSION_DEPOT_NAME_MENU,
 } from '@onexas/sphere/client/constants';
@@ -30,10 +31,10 @@ import {
     MessageLevel,
     PermissionGrant,
     PermissionGrants,
+    StateSyncer,
     Unregister,
 } from '@onexas/sphere/client/types';
 import { AppError, ERR_IGNORABLE, isAppError } from '@onexas/sphere/client/utils/app';
-import { basex58 } from '@onexas/sphere/client/utils/basex';
 import { envTimezoneName, envTimezoneNames } from '@onexas/sphere/client/utils/datetime';
 import { getLogger } from '@onexas/sphere/client/utils/logger';
 import { checkPermissionGrants } from '@onexas/sphere/client/utils/security';
@@ -45,13 +46,18 @@ import { StoreCreateContext } from './register';
 const CFG_PREFIX = 'sphere.workspaceStore.';
 const CFG_MSG_SIZE = CFG_PREFIX + 'maxMessageSize';
 
+const USER_PREFERENCEKEY = "sphere-user";
+
 const logger = getLogger('store.workspace');
 
 type FilterObserverWrap = {
     observer?: FilterObserver;
 };
 
-type PrivitePreferences = {
+type WorkspacePreferences = {
+    loginDomain: string;
+    locale: string;
+    themeName: string
     pageSize: number;
     dateFormat: string;
     timeFormat: string;
@@ -59,9 +65,6 @@ type PrivitePreferences = {
     timezone: string;
     autoReloadSecond: number;
     vingReloadSecond: number;
-};
-type SharedPreferences = {
-    loginDomain: string;
 };
 
 interface SearchParams {
@@ -84,10 +87,13 @@ class SearchParamsImpl implements SearchParams {
 
 //clear after logout or different user alias
 const LOGOUT_COOKIE_CLEAR_LIST = [COOKIE_NAME_AUTH, COOKIE_NAME_LOCALE, COOKIE_NAME_THEME];
-const LOGOUT_LOCAL_DEPOT_CLEAR_LIST = [LOCAL_DEPOT_NAME_LAST_AUID, LOCAL_DEPOT_NAME_PRIVATE_PREFS];
+const LOGOUT_LOCAL_DEPOT_CLEAR_LIST = [LOCAL_DEPOT_NAME_LAST_AUID, LOCAL_DEPOT_NAME_PRI_PREFS];
 const LOGOUT_SESSION_DEPOT_CLEAR_LIST = [SESSION_DEPOT_NAME_MENU];
 
-const defaultPrivitePreferences: PrivitePreferences = {
+const staticDefaultPreferences: WorkspacePreferences = {
+    loginDomain: DOMAIN_LOCAL,
+    locale: "",
+    themeName: "",
     pageSize: 20,
     dateFormat: 'YYYY/MM/DD',
     timeFormat: 'HH:mm',
@@ -95,9 +101,6 @@ const defaultPrivitePreferences: PrivitePreferences = {
     timezone: envTimezoneName,
     autoReloadSecond: 10,
     vingReloadSecond: 5,
-};
-const defaultSharedPreferences: SharedPreferences = {
-    loginDomain: DOMAIN_LOCAL
 };
 
 export default class WorkspaceStore extends AbstractStore {
@@ -125,10 +128,10 @@ export default class WorkspaceStore extends AbstractStore {
     private _windowLocation: Location;
 
     @observable
-    private _privatePreferences: PrivitePreferences;
+    private _pubPreferences: WorkspacePreferences;
 
     @observable
-    private _sharedPreferences: SharedPreferences;
+    private _priPreferences: WorkspacePreferences;
 
     readonly supportedLocales: string[];
     readonly supportedTimezones: string[];
@@ -136,51 +139,57 @@ export default class WorkspaceStore extends AbstractStore {
     private history: History;
     private nexMessageId: number = 0;
 
-    private tempAuthCookieName: string;
+    private defaultPreferences: WorkspacePreferences;
+
+    private stateSyncer?: StateSyncer;
+
+    setStateSyncer(syncer: StateSyncer) {
+        this.stateSyncer = syncer;
+    }
 
     @computed
     get preferredPageSize() {
-        return this._privatePreferences.pageSize;
+        return this.preferences.pageSize;
     }
     set preferredPageSize(preferredPageSize: number) {
-        this.updatePrivitePreferences({ ...this._privatePreferences, pageSize: preferredPageSize });
+        this.preferences = { ...this.preferences, pageSize: preferredPageSize };
     }
 
     @computed
     get preferredAutoReloadSecond() {
-        return this._privatePreferences.autoReloadSecond;
+        return this.preferences.autoReloadSecond;
     }
     set preferredAutoReloadSecond(preferredAutoReloadSecond: number) {
-        this.updatePrivitePreferences({
-            ...this._privatePreferences,
+        this.preferences = {
+            ...this.preferences,
             autoReloadSecond: preferredAutoReloadSecond,
-        });
+        };
     }
 
     @computed
     get preferredVingReloadSecond() {
-        return this._privatePreferences.vingReloadSecond;
+        return this.preferences.vingReloadSecond;
     }
     set preferredVingReloadSecond(preferredVingReloadSecond: number) {
-        this.updatePrivitePreferences({
-            ...this._privatePreferences,
+        this.preferences = {
+            ...this.preferences,
             vingReloadSecond: preferredVingReloadSecond,
-        });
+        };
     }
     @computed
     get preferredDateFormat() {
-        return this._privatePreferences.dateFormat;
+        return this.preferences.dateFormat;
     }
     set preferredDateFormat(preferredDateFormat: string) {
-        this.updatePrivitePreferences({ ...this._privatePreferences, dateFormat: preferredDateFormat });
+        this.preferences = { ...this.preferences, dateFormat: preferredDateFormat };
     }
 
     @computed
     get preferredTimeFormat() {
-        return this._privatePreferences.timeFormat;
+        return this.preferences.timeFormat;
     }
     set preferredTimeFormat(preferredTimeFormat: string) {
-        this.updatePrivitePreferences({ ...this._privatePreferences, timeFormat: preferredTimeFormat });
+        this.preferences = { ...this.preferences, timeFormat: preferredTimeFormat };
     }
 
     @computed
@@ -190,29 +199,45 @@ export default class WorkspaceStore extends AbstractStore {
 
     @computed
     get preferredTimeSecondFormat() {
-        return this._privatePreferences.timeSecondFormat;
+        return this.preferences.timeSecondFormat;
     }
     set preferredTimeSecondFormat(preferredTimeSecondFormat: string) {
-        this.updatePrivitePreferences({
-            ...this._privatePreferences,
+        this.preferences = {
+            ...this.preferences,
             timeSecondFormat: preferredTimeSecondFormat,
-        });
+        };
     }
 
     @computed
     get preferredTimezone() {
-        return this._privatePreferences.timezone;
+        return this.preferences.timezone;
     }
     set preferredTimezone(timezone: string) {
-        this.updatePrivitePreferences({ ...this._privatePreferences, timezone });
+        this.preferences = { ...this.preferences, timezone };
     }
 
     @computed
     get loginDomain() {
-        return this._sharedPreferences.loginDomain;
+        return this.preferences.loginDomain;
     }
     set loginDomain(loginDomain: string) {
-        this.updateSharedPreferences({ ...this._sharedPreferences, loginDomain });
+        this.preferences = { ...this.preferences, loginDomain };
+    }
+
+    @computed
+    get locale() {
+        return this.preferences.locale;
+    }
+    set locale(locale: string) {
+        this.preferences = { ...this.preferences, locale };
+    }
+
+    @computed
+    get themeName() {
+        return this.preferences.themeName;
+    }
+    set themeName(themeName: string) {
+        this.preferences = { ...this.preferences, themeName };
     }
 
     @computed
@@ -240,39 +265,42 @@ export default class WorkspaceStore extends AbstractStore {
         c = this.config.get(SUPPORTED_TIMEZONES);
         this.supportedTimezones = c ? c.split(',') : envTimezoneNames;
 
-        const privatePrefs = this.localDepot.get(LOCAL_DEPOT_NAME_PRIVATE_PREFS);
-        if (privatePrefs) {
-            try {
-                const obj = JSON.parse(basex58.decode(privatePrefs).toString('utf8'));
-                const pp = { ...defaultPrivitePreferences } as any;
-                for (const p in pp) {
-                    pp[p] = obj[p] ? obj[p] : pp[p];
-                }
-                this._privatePreferences = pp;
-            } catch (e) {
-                logger.warn(e);
-            }
-        } else {
-            this._privatePreferences = { ...defaultPrivitePreferences };
-        }
-        logger.debug('private preferences', this._privatePreferences);
+        const prefs = this.defaultPreferences = { ...staticDefaultPreferences };
+        prefs.locale = this.config.get(DEFAULT_LOCALE);
+        prefs.themeName = this.config.get(DEFAULT_THEME);
 
-        const sharedPrefs = this.localDepot.get(LOCAL_DEPOT_NAME_SHARED_PREFS);
-        if (sharedPrefs) {
+        let text = this.localDepot.get(LOCAL_DEPOT_NAME_PRI_PREFS);
+        if (text) {
             try {
-                const obj = JSON.parse(basex58.decode(sharedPrefs).toString('utf8'));
-                const pp = { ...defaultSharedPreferences } as any;
+                const obj = JSON.parse(text);
+                const pp = { ...prefs } as any;
                 for (const p in pp) {
                     pp[p] = obj[p] ? obj[p] : pp[p];
                 }
-                this._sharedPreferences = pp;
+                this._priPreferences = pp;
+            } catch (e) {
+                logger.warn(e);
+            }
+
+            logger.debug('private preferences', this._priPreferences);
+        }
+
+        text = this.localDepot.get(LOCAL_DEPOT_NAME_PUB_PREFS);
+        if (text) {
+            try {
+                const obj = JSON.parse(text);
+                const pp = { ...prefs } as any;
+                for (const p in pp) {
+                    pp[p] = obj[p] ? obj[p] : pp[p];
+                }
+                this._pubPreferences = pp;
             } catch (e) {
                 logger.warn(e);
             }
         } else {
-            this._sharedPreferences = { ...defaultSharedPreferences };
+            this._pubPreferences = { ...prefs };
         }
-        logger.debug('shared preferences', this._sharedPreferences);
+        logger.debug('pub preferences', this._pubPreferences);
 
         this._urlSearchParams = new SearchParamsImpl();
         this._windowLocation = hasWindow && window.location;
@@ -291,9 +319,7 @@ export default class WorkspaceStore extends AbstractStore {
             this.sessionDepot.remove(n);
         });
 
-        this._privatePreferences = { ...defaultPrivitePreferences };
-        
-        //no need to clear shared preference
+        this._priPreferences = undefined;
     }
 
     async logout(backpath?: string) {
@@ -324,7 +350,8 @@ export default class WorkspaceStore extends AbstractStore {
                 this.cookies.set(COOKIE_NAME_AUTH, res.token);
                 this.localDepot.set(LOCAL_DEPOT_NAME_LAST_AUID, res.aliasUid);
                 this.authentication = res;
-            });
+                return this.loadServerUserPreference();
+            })
     }
 
     get authenticatable(): boolean {
@@ -341,6 +368,45 @@ export default class WorkspaceStore extends AbstractStore {
         return this._windowLocation;
     }
 
+    async loadServerUserPreference() {
+        return new CoordinatePreferenceApi(buildApiConfiguration(this.storeHolder)).findPreference({
+            key: USER_PREFERENCEKEY
+        }).then((res) => {
+            let preferences: WorkspacePreferences;
+            if (res) {
+                try {
+                    const obj = JSON.parse(res);
+                    const pp = { ...this.defaultPreferences } as any;
+                    for (const p in pp) {
+                        pp[p] = obj[p] ? obj[p] : pp[p];
+                    }
+                    this._priPreferences = preferences = pp;
+                } catch (e) {
+                    logger.warn(e);
+                }
+            }
+            if (!preferences) {
+                preferences = { ...this._pubPreferences };
+                this._priPreferences = preferences;
+            }
+            this.localDepot.set(LOCAL_DEPOT_NAME_PRI_PREFS, JSON.stringify(preferences));
+
+            if (!(this.locale !== preferences.locale || this.themeName !== preferences.themeName)) {
+                return this.refresh();
+            }
+        })
+    }
+    async saveServerUserPreference() {
+        //code gengen can hendle text/plain for a string well (always stringify again in runtime.js)
+        //so, we have to pass object directly to make it correct
+        // const value = JSON.stringify({...this._priPreferences});
+        const value = { ...this._priPreferences } as any;
+        return new CoordinatePreferenceApi(buildApiConfiguration(this.storeHolder)).updatePreference({
+            key: USER_PREFERENCEKEY,
+            value
+        })
+    }
+
     async authenticate() {
         const token = this.cookies.get(COOKIE_NAME_AUTH);
         if (token) {
@@ -351,12 +417,17 @@ export default class WorkspaceStore extends AbstractStore {
                     },
                 })
                 .then((res) => {
-                    if (res.aliasUid !== this.localDepot.get(LOCAL_DEPOT_NAME_LAST_AUID)) {
+                    const lauid = this.localDepot.get(LOCAL_DEPOT_NAME_LAST_AUID);
+                    if (res.aliasUid !== lauid) {
                         this.clearUserData();
                     }
                     this.cookies.set(COOKIE_NAME_AUTH, res.token);
                     this.localDepot.set(LOCAL_DEPOT_NAME_LAST_AUID, res.aliasUid);
                     this.authentication = res;
+                    //don't always load user preference in token mode
+                    if (res.aliasUid !== lauid || !this._priPreferences) {
+                        return this.loadServerUserPreference();
+                    }
                 });
         } else {
             throw new AppError("can't find any token, please login again");
@@ -384,20 +455,18 @@ export default class WorkspaceStore extends AbstractStore {
         this.messages = this.messages.filter((m) => m.key !== key);
     }
 
-    private updatePrivitePreferences(preferences: PrivitePreferences) {
-        this._privatePreferences = preferences;
-        this.localDepot.set(
-            LOCAL_DEPOT_NAME_PRIVATE_PREFS,
-            basex58.encode(Buffer.from(JSON.stringify(preferences), 'utf8'))
-        );
+    private get preferences() {
+        return this._priPreferences || this._pubPreferences;
     }
 
-    private updateSharedPreferences(preferences: SharedPreferences) {
-        this._sharedPreferences = preferences;
-        this.localDepot.set(
-            LOCAL_DEPOT_NAME_SHARED_PREFS,
-            basex58.encode(Buffer.from(JSON.stringify(preferences), 'utf8'))
-        );
+    private set preferences(preferences: WorkspacePreferences) {
+        if (this._priPreferences) {
+            this._priPreferences = preferences;
+            this.localDepot.set(LOCAL_DEPOT_NAME_PRI_PREFS, JSON.stringify(preferences));
+        } else {
+            this._pubPreferences = preferences;
+            this.localDepot.set(LOCAL_DEPOT_NAME_PUB_PREFS, JSON.stringify(preferences));
+        }
     }
 
     async redirect(path: string, evt?: any) {
@@ -436,6 +505,10 @@ export default class WorkspaceStore extends AbstractStore {
         if (hasWindow) {
             window.location.reload();
         }
+    }
+
+    async refresh() {
+        this.stateSyncer?.sync();
     }
 
     async hintReroute() {

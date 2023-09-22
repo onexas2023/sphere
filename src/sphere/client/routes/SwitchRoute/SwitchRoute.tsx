@@ -4,9 +4,11 @@
  * @author: Dennis Chen
  */
 
-import Loadable from '@onexas/react-loadable';
-import { createTheme, Theme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import Fade from '@mui/material/Fade';
+import { createTheme, StyledEngineProvider, Theme, ThemeProvider } from '@mui/material/styles';
 import withStyles from '@mui/styles/withStyles';
+import Loadable from '@onexas/react-loadable';
 import { LoadingLanguage } from '@onexas/sphere/client/components/Loading';
 import {
     DEFAULT_LOCALE,
@@ -15,9 +17,7 @@ import {
     SITE_NAME,
 } from '@onexas/sphere/client/config';
 import {
-    COOKIE_NAME_LOCALE,
-    COOKIE_NAME_THEME,
-    WITH_STYLE_APP_IDX,
+    WITH_STYLE_APP_IDX
 } from '@onexas/sphere/client/constants';
 import { AppContextProvider } from '@onexas/sphere/client/context';
 import { I18nLoaderRegister, I18nRegister } from '@onexas/sphere/client/i18n';
@@ -36,16 +36,12 @@ import {
     I18n,
     StoreHolder,
 } from '@onexas/sphere/client/types';
-import { moment } from '@onexas/sphere/client/utils/datetime';
 import { getLogger } from '@onexas/sphere/client/utils/logger';
 import { typeOfFunction } from '@onexas/sphere/client/utils/object';
 import NotFoundView from '@onexas/sphere/client/views/NotFoundView';
 import UiErrorView from '@onexas/sphere/client/views/UiErrorView';
-import CssBaseline from '@mui/material/CssBaseline';
-import Fade from '@mui/material/Fade';
-import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import clsx from 'clsx';
-import { Action as HistoryAction, History, Location as HistoryLocation } from 'history';
+import { History, Action as HistoryAction, Location as HistoryLocation } from 'history';
 import { autorun } from 'mobx';
 import { disposeOnUnmount } from 'mobx-react';
 import React from 'react';
@@ -150,15 +146,12 @@ export default class SwitchRoute extends React.PureComponent<SwitchRouteProps, S
     defaultLocale: string;
     defaultThemeName: string;
     storeHolder: StoreHolder;
+    workspaceStore: WorkspaceStore;
     locationData: LocationData;
     historyUnregister: () => void;
 
     constructor(props: SwitchRouteProps) {
         super(props);
-        this.defaultLocale = props.config.get(DEFAULT_LOCALE);
-        this.defaultThemeName = props.config.get(DEFAULT_THEME);
-        const locale: string = props.cookies.get(COOKIE_NAME_LOCALE, this.defaultLocale);
-        const themeName: string = props.cookies.get(COOKIE_NAME_THEME, this.defaultThemeName);
 
         this.storeHolder = props.storeRegister.create({
             config: props.config,
@@ -167,9 +160,19 @@ export default class SwitchRoute extends React.PureComponent<SwitchRouteProps, S
             localDepot: props.localDepot,
             sessionDepot: props.sessionDepot,
         });
+        this.defaultLocale = props.config.get(DEFAULT_LOCALE);
+        this.defaultThemeName = props.config.get(DEFAULT_THEME);
+
+        const ws = this.workspaceStore = this.storeHolder.get(WorkspaceStore);
+        ws.setStateSyncer({
+            sync: this.syncWorkspaceState
+        })
+        const locale = ws.locale;
+        const themeName = ws.themeName;
+
         this.state = {
             locale,
-            themeName,
+            themeName
         };
         this.locationData = {
             pathname: props.history.location.pathname,
@@ -178,17 +181,21 @@ export default class SwitchRoute extends React.PureComponent<SwitchRouteProps, S
     }
 
     changeLocale = (locale: string) => {
-        this.props.cookies.set(COOKIE_NAME_LOCALE, locale, {
-            expires: moment().add(1, 'y').toDate(),
-        });
         this.setState({ ...this.state, locale });
+        this.workspaceStore.locale = locale;
     };
     changeTheme = (themeName: string) => {
-        this.props.cookies.set(COOKIE_NAME_THEME, themeName, {
-            expires: moment().add(1, 'y').toDate(),
-        });
         this.setState({ ...this.state, themeName });
+        this.workspaceStore.themeName = themeName;
     };
+    syncWorkspaceState = () => {
+        const ws = this.workspaceStore;
+        this.setState({
+            ...this.state,
+            themeName: ws.themeName,
+            locale: ws.locale
+        });
+    }
 
     onHistoryChange = (location: HistoryLocation, action: HistoryAction) => {
         const { locationData, storeHolder } = this;

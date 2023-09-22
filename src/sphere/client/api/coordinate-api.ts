@@ -13,6 +13,7 @@ import { CoordinateOrganizationApi } from '@onexas/coordinate-api-sdk-typescript
 import { CoordinateProfileApi } from '@onexas/coordinate-api-sdk-typescript/dist/apis/CoordinateProfileApi';
 import { CoordinateUserApi } from '@onexas/coordinate-api-sdk-typescript/dist/apis/CoordinateUserApi';
 import { CoordinateJobApi } from '@onexas/coordinate-api-sdk-typescript/dist/apis/CoordinateJobApi';
+import { CoordinatePreferenceApi } from '@onexas/coordinate-api-sdk-typescript/dist/apis/CoordinatePreferenceApi';
 import { Authentication } from '@onexas/coordinate-api-sdk-typescript/dist/models/Authentication';
 import { AuthenticationRequest } from '@onexas/coordinate-api-sdk-typescript/dist/models/AuthenticationRequest';
 import { OrganizationUserRelationType } from '@onexas/coordinate-api-sdk-typescript/dist/models/OrganizationUserRelationType';
@@ -39,6 +40,7 @@ export {
     CoordinateMetainfoApi,
     CoordinateOrganizationApi,
     CoordinateJobApi,
+    CoordinatePreferenceApi,
     AuthenticationRequest,
     Authentication,
     UJob,
