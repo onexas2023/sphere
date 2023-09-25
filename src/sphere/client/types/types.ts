@@ -102,6 +102,11 @@ export interface Depot {
     clear(): void;
 }
 
+//an interface for refreshWorkspace
+export interface StateSyncer {
+    sync(): void;
+}
+
 export interface I18n {
     /**
      * the current locale of i18n

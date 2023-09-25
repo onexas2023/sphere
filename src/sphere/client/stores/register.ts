@@ -5,10 +5,10 @@
  */ 
 
 import { Config, Cookies, Depot, Store, StoreHolder } from '@onexas/sphere/client/types';
-import StoreHolderImpl from './StoreHolderImpl';
-import { History } from 'history';
-import WorkspaceStore from './WorkspaceStore';
 import { getLogger } from '@onexas/sphere/client/utils/logger';
+import { History } from 'history';
+import StoreHolderImpl from './StoreHolderImpl';
+import WorkspaceStore from './WorkspaceStore';
 
 const logger = getLogger('store');
 
