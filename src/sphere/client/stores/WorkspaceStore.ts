@@ -397,10 +397,7 @@ export default class WorkspaceStore extends AbstractStore {
         })
     }
     async saveServerUserPreference() {
-        //code gengen can hendle text/plain for a string well (always stringify again in runtime.js)
-        //so, we have to pass object directly to make it correct
-        // const value = JSON.stringify({...this._priPreferences});
-        const value = { ...this._priPreferences } as any;
+        const value = JSON.stringify({...this._priPreferences});
         return new CoordinatePreferenceApi(buildApiConfiguration(this.storeHolder)).updatePreference({
             key: USER_PREFERENCEKEY,
             value
