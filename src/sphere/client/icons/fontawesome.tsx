@@ -119,6 +119,7 @@ export { faFile as farFile } from '@fortawesome/free-regular-svg-icons/faFile';
 export { faFileImage as farFileImage } from '@fortawesome/free-regular-svg-icons/faFileImage';
 export { faFilePdf as farFilePdf } from '@fortawesome/free-regular-svg-icons/faFilePdf';
 export { faSave as farSave } from '@fortawesome/free-regular-svg-icons/faSave';
+export { faSave as fasSave } from '@fortawesome/free-solid-svg-icons/faSave';
 export { faLevelUpAlt as fasLevelUpAlt } from '@fortawesome/free-solid-svg-icons/faLevelUpAlt';
 export { faClipboard as fasClipboard } from '@fortawesome/free-solid-svg-icons/faClipboard';
 export { faDownload as fasDownload } from '@fortawesome/free-solid-svg-icons/faDownload';
